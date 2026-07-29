@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InventoryHub</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <!-- ================= Sidebar ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <i class="bi bi-box-seam-fill"></i>
+
+            <h2>InventoryHub</h2>
+
+        </div>
+
+        <nav id="mainNav">
+
+            <a href="#" class="nav-link active" data-view="dashboard">
+                <i class="bi bi-speedometer2"></i>
+                Dashboard
+            </a>
+
+            <a href="#" class="nav-link" data-view="inventory">
+                <i class="bi bi-box"></i>
+                Inventory
+            </a>
+
+            <a href="#" class="nav-link" data-view="shopping">
+                <i class="bi bi-bag-check"></i>
+                Shopping List
+            </a>
+
+            <a href="#" class="nav-link" data-view="reports">
+                <i class="bi bi-graph-up"></i>
+                Reports
+            </a>
+
+            <a href="#" class="nav-link" data-view="settings">
+                <i class="bi bi-gear"></i>
+                Settings
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main">
+
+        <!-- Page Header -->
+        <header class="topbar">
+            <div>
+                <h1 id="pageTitle">Dashboard</h1>
+                <p id="pageSubtitle">Inventory Overview</p>
+            </div>
+
+            <div class="user">
+                <i class="bi bi-person-circle"></i>
+                Brian
+            </div>
+        </header>
+
+        <!-- ================= DASHBOARD VIEW ================= -->
+        <section id="dashboard-view" class="view-section active">
+
+            <!-- Dashboard Cards -->
+            <section class="cards">
+                <div class="card-box">
+                    <h6>Total Products</h6>
+                    <h2 id="totalItems">0</h2>
+                </div>
+                <div class="card-box gold">
+                    <h6>Low Stock</h6>
+                    <h2 id="lowStock">0</h2>
+                </div>
+                <div class="card-box danger-card">
+                    <h6>Out of Stock</h6>
+                    <h2 id="outOfStock">0</h2>
+                </div>
+                <div class="card-box">
+                    <h6>Inventory Value</h6>
+                    <h2 id="inventoryValue">$0.00</h2>
+                </div>
+                <div class="card-box gold">
+                    <h6>Restock Cost</h6>
+                    <h2 id="restockCost">$0.00</h2>
+                </div>
+            </section>
+
+            <!-- Needs Restocking Panel -->
+            <section class="restock-panel">
+                <h3>
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    Needs Restocking
+                </h3>
+                <div class="restock-table-container">
+                    <table class="restock-table">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Current Qty</th>
+                                <th>Minimum Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody id="restockList">
+                        </tbody>
+                    </table>
+                    <div id="restockEmpty" style="text-align: center; padding: 30px; color: #7A7A7A;">
+                        All items are well stocked!
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activity -->
+            <section class="recent-activity">
+                <h3>
+                    <i class="bi bi-clock-history"></i>
+                    Recent Activity
+                </h3>
+                <div class="activity-list">
+                    <p style="text-align: center; padding: 30px; color: #7A7A7A;">Activity log coming soon...</p>
+                </div>
+            </section>
+
+        </section>
+
+        <!-- ================= INVENTORY VIEW ================= -->
+        <section id="inventory-view" class="view-section">
+
+            <div class="inventory">
+                <div class="inventory-header">
+                    <h2>Inventory</h2>
+                    <button id="addItemBtn">
+                        <i class="bi bi-plus-circle"></i>
+                        Add Item
+                    </button>
+                </div>
+
+                <div class="toolbar">
+                    <input type="text" id="searchBox" placeholder="Search inventory...">
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Category</th>
+                                <th>Qty</th>
+                                <th>Min</th>
+                                <th>Cost</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= SHOPPING LIST VIEW ================= -->
+        <section id="shopping-view" class="view-section">
+
+            <div class="shopping-list-section">
+                <div class="shopping-list-header">
+                    <h2>
+                        <i class="bi bi-bag-check"></i>
+                        Shopping List
+                    </h2>
+                    <div class="shopping-list-actions">
+                        <button id="generateShoppingListBtn" class="action-primary">
+                            <i class="bi bi-arrow-clockwise"></i>
+                            Generate Shopping List
+                        </button>
+                        <button id="exportShoppingListBtn" class="action-secondary">
+                            <i class="bi bi-download"></i>
+                            Export CSV
+                        </button>
+                    </div>
+                </div>
+                <div class="shopping-list-container">
+                    <table class="shopping-list-table">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Current Qty</th>
+                                <th>Minimum Qty</th>
+                                <th>Suggested Purchase</th>
+                                <th>Cost</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="shoppingListBody">
+                        </tbody>
+                    </table>
+                    <div id="shoppingListEmpty" style="text-align: center; padding: 30px; color: #7A7A7A;">
+                        No items to purchase. All stock is adequate!
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= REPORTS VIEW ================= -->
+        <section id="reports-view" class="view-section">
+
+            <div class="reports-container">
+
+                <!-- Inventory Value Report -->
+                <div class="report-card">
+                    <h3>
+                        <i class="bi bi-cash-coin"></i>
+                        Inventory Value Report
+                    </h3>
+                    <div class="report-content">
+                        <div class="report-stat">
+                            <span class="label">Total Inventory Value</span>
+                            <span class="value" id="reportTotalValue">$0.00</span>
+                        </div>
+                        <div class="report-stat">
+                            <span class="label">Average Item Value</span>
+                            <span class="value" id="reportAvgValue">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Items by Category -->
+                <div class="report-card">
+                    <h3>
+                        <i class="bi bi-tags-fill"></i>
+                        Items by Category
+                    </h3>
+                    <div class="report-content" id="categoryBreakdown">
+                    </div>
+                </div>
+
+                <!-- Low Stock Summary -->
+                <div class="report-card">
+                    <h3>
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        Low Stock Summary
+                    </h3>
+                    <div class="report-content">
+                        <div class="report-stat">
+                            <span class="label">Low Stock Items</span>
+                            <span class="value warning" id="reportLowCount">0</span>
+                        </div>
+                        <div class="report-stat">
+                            <span class="label">Total to Restock</span>
+                            <span class="value warning" id="reportLowCost">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Out of Stock Summary -->
+                <div class="report-card">
+                    <h3>
+                        <i class="bi bi-x-circle-fill"></i>
+                        Out of Stock Summary
+                    </h3>
+                    <div class="report-content">
+                        <div class="report-stat">
+                            <span class="label">Out of Stock Items</span>
+                            <span class="value danger" id="reportOutCount">0</span>
+                        </div>
+                        <div class="report-stat">
+                            <span class="label">Items Affected</span>
+                            <div id="reportOutItems" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Restocks -->
+                <div class="report-card full-width">
+                    <h3>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Recent Restocks
+                    </h3>
+                    <div class="report-content">
+                        <div id="recentRestocksTable" class="recent-restocks-table">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ================= SETTINGS VIEW ================= -->
+        <section id="settings-view" class="view-section">
+
+            <div class="settings-container">
+
+                <!-- Business Settings -->
+                <div class="settings-card">
+                    <h3>
+                        <i class="bi bi-building"></i>
+                        Business Settings
+                    </h3>
+                    <div class="settings-content">
+                        <div class="setting-item">
+                            <label for="businessName">Business Name</label>
+                            <input type="text" id="businessName" placeholder="Enter business name" value="InventoryHub">
+                        </div>
+                        <div class="setting-item">
+                            <label for="defaultCurrency">Default Currency</label>
+                            <select id="defaultCurrency">
+                                <option value="USD">USD ($)</option>
+                                <option value="EUR">EUR (€)</option>
+                                <option value="GBP">GBP (£)</option>
+                                <option value="CAD">CAD (C$)</option>
+                            </select>
+                        </div>
+                        <button id="saveSettingsBtn" class="action-primary">
+                            <i class="bi bi-check-lg"></i>
+                            Save Settings
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Preferences -->
+                <div class="settings-card">
+                    <h3>
+                        <i class="bi bi-sliders"></i>
+                        Preferences
+                    </h3>
+                    <div class="settings-content">
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="lowStockWarning" checked> 
+                                Enable Low Stock Warnings
+                            </label>
+                        </div>
+                        <p style="font-size: 13px; color: var(--gray); margin-top: 10px;">
+                            When enabled, items below minimum quantity will be highlighted
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Data Management -->
+                <div class="settings-card full-width">
+                    <h3>
+                        <i class="bi bi-database"></i>
+                        Data Management
+                    </h3>
+                    <div class="settings-content">
+                        <div class="data-actions">
+                            <button id="exportAllBtn" class="action-secondary">
+                                <i class="bi bi-download"></i>
+                                Export All Inventory
+                            </button>
+                            <button id="importAllBtn" class="action-secondary">
+                                <i class="bi bi-upload"></i>
+                                Import Inventory
+                            </button>
+                            <input type="file" id="importFile" accept=".json" style="display: none;">
+                            <button id="resetDataBtn" class="action-danger">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                                Reset Sample Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theme (Placeholder) -->
+                <div class="settings-card">
+                    <h3>
+                        <i class="bi bi-palette"></i>
+                        Theme
+                    </h3>
+                    <div class="settings-content">
+                        <p style="color: var(--gray); font-size: 14px;">
+                            <i class="bi bi-info-circle"></i>
+                            Theme customization coming in v1.4
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<!-- ================= Modal ================= -->
+
+<div class="modal" id="itemModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2>Add Inventory Item</h2>
+
+            <button class="close">&times;</button>
+
+        </div>
+
+                <div class="modal-body">
+            <div class="row">
+                <div class="field">
+                    <label>Item Name</label>
+                    <input id="itemName" placeholder="e.g. Coffee Cups">
+                </div>
+                <div class="field">
+                    <label>Category</label>
+                    <select id="itemCategory">
+                        <option value="Drinks">Drinks</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Candy">Candy</option>
+                        <option value="Coffee">Coffee</option>
+                        <option value="Creamers">Creamers</option>
+                        <option value="Paper Products">Paper Products</option>
+                        <option value="Cleaning Supplies">Cleaning Supplies</option>
+                        <option value="Office Supplies">Office Supplies</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label>Quantity</label>
+                    <input type="number" id="itemQty" min="0" value="0">
+                </div>
+                <div class="field">
+                    <label>Min. Quantity</label>
+                    <input type="number" id="itemMin" min="0" value="5">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label>Max. Stock</label>
+                    <input type="number" id="itemMax" min="0" value="10">
+                </div>
+                <div class="field">
+                    <label>Cost ($)</label>
+                    <input type="number" id="itemCost" min="0" step="0.01" value="0.00">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label>Location</label>
+                    <input id="itemLocation" placeholder="e.g. Fridge 1">
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+
+            <button class="cancel">
+
+                Cancel
+
+            </button>
+
+            <button class="save">
+
+                Save Item
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+
+</html>
