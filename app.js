@@ -615,5 +615,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const barcodeManager = new BarcodeManager();
     const inventoryManager = new InventoryManager(activityManager, historyManager, barcodeManager);
     const ui = new InventoryUI(inventoryManager, activityManager);
-    new NavigationController(ui, activityManager, historyManager, barcodeManager);
+    window.navigation = new NavigationController(ui, activityManager, historyManager, barcodeManager);
+    new ScannerController(ui, inventoryManager, historyManager, barcodeManager);
 });

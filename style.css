@@ -982,7 +982,13 @@ tbody img{
 
 .view-section {
     display: none;
-    animation: fadeIn .3s ease;
+        animation: fadeIn .3s ease;
+}
+
+@keyframes scannerLine {
+    0% { top: 0; }
+    50% { top: 100%; }
+    100% { top: 0; }
 }
 
 .view-section.active {
@@ -1278,6 +1284,61 @@ tbody img{
 #saveSettingsBtn {
     align-self: flex-start;
 }
+
+#reader video {
+    border-radius: 12px;
+}
+
+/* ======================
+   QUICK ACTION MODAL
+====================== */
+
+.quick-action-modal .modal-content {
+    width: 450px;
+}
+
+.quick-action-item-info {
+    text-align: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.quick-action-item-info h3 {
+    margin: 0;
+    color: var(--blue);
+}
+
+.quick-action-item-info p {
+    margin: 5px 0;
+    color: var(--gray);
+}
+
+.quick-qty-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.quick-qty-btn {
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.quick-qty-btn:hover {
+    background: var(--background);
+    border-color: var(--blue);
+    color: var(--blue);
+}
+
+.quick-qty-btn.plus { color: var(--success); }
+.quick-qty-btn.minus { color: var(--danger); }
 
 /* ======================
       ANIMATIONS

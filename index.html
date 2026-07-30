@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InventoryHub</title>
+        <title>InventoryHub</title>
+
+    <!-- HTML5-QRCode Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -54,9 +57,14 @@
                 History
             </a>
 
-            <a href="#" class="nav-link" data-view="barcodes">
+                        <a href="#" class="nav-link" data-view="barcodes">
                 <i class="bi bi-barcode"></i>
                 Barcode Labels
+            </a>
+
+            <a href="#" class="nav-link" data-view="scanner">
+                <i class="bi bi-camera-fill"></i>
+                Scanner
             </a>
 
             <a href="#" class="nav-link" data-view="shopping">
@@ -261,6 +269,33 @@
                         <tbody id="barcodeTableBody">
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SCANNER VIEW ================= -->
+        <section id="scanner-view" class="view-section">
+            <div class="inventory">
+                <div class="inventory-header">
+                    <h2>Barcode Scanner</h2>
+                    <div class="shopping-list-actions">
+                        <select id="cameraSelect" class="form-select" style="width: 200px; display: inline-block;"></select>
+                        <button id="toggleScannerBtn" class="action-primary">
+                            <i class="bi bi-camera"></i>
+                            Start Scanner
+                        </button>
+                    </div>
+                </div>
+
+                <div class="scanner-container" style="background: #000; min-height: 400px; display: flex; align-items: center; justify-content: center; position: relative;">
+                    <div id="reader" style="width: 100%; max-width: 600px;"></div>
+                    <div id="scannerOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; border: 2px solid var(--gold); display: none; box-shadow: inset 0 0 100px rgba(255,199,44,0.2);">
+                        <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: var(--gold); animation: scannerLine 2s infinite linear;"></div>
+                    </div>
+                </div>
+
+                <div class="toolbar" style="text-align: center; color: var(--gray);">
+                    <p id="scannerStatus">Scanner is off. Click "Start Scanner" to begin.</p>
                 </div>
             </div>
         </section>
@@ -625,6 +660,73 @@
 
     </div>
 
+</div>
+
+<!-- ================= Quick Action Modal ================= -->
+
+<div class="modal quick-action-modal" id="quickActionModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Quick Actions</h2>
+            <button class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="quick-action-item-info">
+                <h3 id="qaItemName">Item Name</h3>
+                <p id="qaItemCategory">Category</p>
+                <p id="qaItemBarcode" style="font-family: monospace;">Barcode</p>
+                <div style="font-size: 24px; font-weight: 700; color: var(--blue); margin-top: 10px;">
+                    Qty: <span id="qaItemQty">0</span>
+                </div>
+            </div>
+
+            <div class="quick-qty-grid">
+                <button class="quick-qty-btn plus" data-amount="1">+1</button>
+                <button class="quick-qty-btn plus" data-amount="5">+5</button>
+                <button class="quick-qty-btn plus" data-amount="10">+10</button>
+                <button class="quick-qty-btn minus" data-amount="-1">-1</button>
+                <button class="quick-qty-btn minus" data-amount="-5">-5</button>
+                <button class="quick-qty-btn minus" data-amount="-10">-10</button>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button id="qaViewHistory" class="action-secondary" style="width: 100%; justify-content: center; padding: 12px;">
+                    <i class="bi bi-clock-history"></i> View Item History
+                </button>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="cancel">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= Barcode Not Found Modal ================= -->
+
+<div class="modal" id="barcodeNotFoundModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Barcode Not Found</h2>
+            <button class="close">&times;</button>
+        </div>
+        <div class="modal-body" style="text-align: center; padding: 30px;">
+            <i class="bi bi-search" style="font-size: 48px; color: var(--gold); display: block; margin-bottom: 20px;"></i>
+            <p>The barcode <strong id="notFoundBarcode"></strong> was not found in the system.</p>
+            <p style="color: var(--gray);">What would you like to do?</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 25px;">
+                <button id="btnCreateWithBarcode" class="action-primary" style="justify-content: center; padding: 15px;">
+                    <i class="bi bi-plus-circle"></i> Create New Product with this Barcode
+                </button>
+                <button id="btnAssignToExisting" class="action-secondary" style="justify-content: center; padding: 15px;">
+                    <i class="bi bi-link-45deg"></i> Assign to Existing Product
+                </button>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="cancel">Cancel</button>
+        </div>
+    </div>
 </div>
 
 <script src="history.js"></script>
