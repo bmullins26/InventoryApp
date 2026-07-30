@@ -34,7 +34,7 @@
 
         <nav id="mainNav">
 
-            <a href="#" class="nav-link active" data-view="dashboard">
+                        <a href="#" class="nav-link active" data-view="dashboard">
                 <i class="bi bi-speedometer2"></i>
                 Dashboard
             </a>
@@ -42,6 +42,21 @@
             <a href="#" class="nav-link" data-view="inventory">
                 <i class="bi bi-box"></i>
                 Inventory
+            </a>
+
+                        <a href="#" class="nav-link" data-view="activity">
+                <i class="bi bi-clock-history"></i>
+                Activity Log
+            </a>
+
+                        <a href="#" class="nav-link" data-view="history">
+                <i class="bi bi-list-columns-reverse"></i>
+                History
+            </a>
+
+            <a href="#" class="nav-link" data-view="barcodes">
+                <i class="bi bi-barcode"></i>
+                Barcode Labels
             </a>
 
             <a href="#" class="nav-link" data-view="shopping">
@@ -83,7 +98,7 @@
         <!-- ================= DASHBOARD VIEW ================= -->
         <section id="dashboard-view" class="view-section active">
 
-            <!-- Dashboard Cards -->
+                        <!-- Dashboard Cards -->
             <section class="cards">
                 <div class="card-box">
                     <h6>Total Products</h6>
@@ -98,12 +113,12 @@
                     <h2 id="outOfStock">0</h2>
                 </div>
                 <div class="card-box">
-                    <h6>Inventory Value</h6>
-                    <h2 id="inventoryValue">$0.00</h2>
+                    <h6>Internal Barcodes</h6>
+                    <h2 id="internalBarcodeStat">0</h2>
                 </div>
-                <div class="card-box gold">
-                    <h6>Restock Cost</h6>
-                    <h2 id="restockCost">$0.00</h2>
+                <div class="card-box">
+                    <h6>Missing Barcodes</h6>
+                    <h2 id="missingBarcodeStat">0</h2>
                 </div>
             </section>
 
@@ -131,17 +146,123 @@
                 </div>
             </section>
 
-            <!-- Recent Activity -->
+                        <!-- Recent Activity -->
             <section class="recent-activity">
                 <h3>
                     <i class="bi bi-clock-history"></i>
                     Recent Activity
                 </h3>
-                <div class="activity-list">
-                    <p style="text-align: center; padding: 30px; color: #7A7A7A;">Activity log coming soon...</p>
+                <div class="activity-list" id="recentActivityList">
+                    <!-- JS Populated -->
                 </div>
             </section>
 
+        </section>
+
+        <!-- ================= ACTIVITY LOG VIEW ================= -->
+        <section id="activity-view" class="view-section">
+            <div class="inventory">
+                <div class="inventory-header">
+                    <h2>Activity Log</h2>
+                    <button id="exportActivityBtn">
+                        <i class="bi bi-download"></i>
+                        Export CSV
+                    </button>
+                </div>
+
+                <div class="toolbar">
+                    <input type="text" id="activitySearch" placeholder="Search activities by item, action or date...">
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Item</th>
+                                <th>Action</th>
+                                <th>Prev</th>
+                                <th>New</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= HISTORY VIEW ================= -->
+        <section id="history-view" class="view-section">
+            <div class="inventory">
+                <div class="inventory-header">
+                    <h2>Inventory History</h2>
+                    <button id="exportHistoryBtn">
+                        <i class="bi bi-download"></i>
+                        Export CSV
+                    </button>
+                </div>
+
+                <div class="toolbar">
+                    <input type="text" id="historySearch" placeholder="Search history by item, type, category or date...">
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Item</th>
+                                <th>Type</th>
+                                <th>Prev</th>
+                                <th>Change</th>
+                                <th>New</th>
+                                <th>User</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= BARCODE VIEW ================= -->
+        <section id="barcodes-view" class="view-section">
+            <div class="inventory">
+                <div class="inventory-header">
+                    <h2>Barcode Label Printing</h2>
+                    <div class="shopping-list-actions">
+                        <button id="printAllLabelsBtn" class="action-secondary">
+                            <i class="bi bi-printer"></i>
+                            Print All Labels
+                        </button>
+                    </div>
+                </div>
+
+                <div class="toolbar">
+                    <input type="text" id="barcodeSearch" placeholder="Search for items to print labels...">
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Category</th>
+                                <th>Internal Barcode</th>
+                                <th>Manufacturer Barcode</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="barcodeTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </section>
 
         <!-- ================= INVENTORY VIEW ================= -->
@@ -467,6 +588,17 @@
                 </div>
             </div>
 
+                        <div class="row">
+                <div class="field">
+                    <label>Manufacturer Barcode</label>
+                    <input id="itemManufacturerBarcode" placeholder="Scan or enter UPC/EAN">
+                </div>
+                <div class="field">
+                    <label>Internal Barcode</label>
+                    <input id="itemInternalBarcode" readonly placeholder="Auto-generated">
+                </div>
+            </div>
+
             <div class="row">
                 <div class="field">
                     <label>Location</label>
@@ -495,6 +627,8 @@
 
 </div>
 
+<script src="history.js"></script>
+<script src="barcodes.js"></script>
 <script src="app.js"></script>
 </body>
 
