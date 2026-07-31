@@ -3,8 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Inventory IQ</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Inventory IQ</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0056B3">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Inventory IQ">
+    <link rel="apple-touch-icon" href="logo.png">
 
     <!-- HTML5-QRCode Scanner Library -->
     <script src="https://unpkg.com/html5-qrcode"></script>
@@ -78,11 +87,16 @@
                 Analytics
             </a>
 
-            <a href="#" class="nav-link" data-view="settings">
+                        <a href="#" class="nav-link" data-view="settings">
                 <i class="bi bi-gear"></i>
                 Settings
             </a>
 
+            <div id="installAppContainer" style="display:none; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <button id="installAppBtn" class="action-secondary" style="width: 100%; justify-content: center; background: var(--gold); color: #222; border: none;">
+                    <i class="bi bi-download"></i> Install App
+                </button>
+            </div>
         </nav>
 
     </aside>

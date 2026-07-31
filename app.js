@@ -637,6 +637,39 @@ class NavigationController {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js')
+                .then(reg => console.log('Service Worker registered'))
+                .catch(err => console.log('Service Worker registration failed', err));
+        });
+    }
+
+    // PWA Install Prompt Logic
+    let deferredPrompt;
+    const installContainer = document.getElementById('installAppContainer');
+    const installBtn = document.getElementById('installAppBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (installContainer) installContainer.style.display = 'block';
+    });
+
+    if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    if (installContainer) installContainer.style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        });
+    }
+
     const activityManager = new ActivityManager();
     const historyManager = new HistoryManager();
     const barcodeManager = new BarcodeManager();

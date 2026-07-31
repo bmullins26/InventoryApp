@@ -1,0 +1,18 @@
+{
+    "name": "Inventory IQ",
+    "short_name": "InventoryIQ",
+    "description": "Smart Inventory Management - Track, Manage, Optimize",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#FFFFFF",
+    "theme_color": "#0056B3",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "logo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
