@@ -149,28 +149,30 @@ tbody td { padding: 16px 24px; border-bottom: 1px solid var(--border); font-size
 .status.low { background: #fef9c3; color: #854d0e; }
 .status.outofstock { background: #fee2e2; color: #991b1b; }
 
-/* History Transaction Type Badges */
-.badge-iq {
-    display: inline-flex;
+/* History Transaction Type Indicators */
+.tx-type-iq {
+    display: flex;
     align-items: center;
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-size: 12px;
+    gap: 8px;
+    font-size: 14px;
     font-weight: 600;
-    line-height: 1;
+    color: var(--text);
     white-space: nowrap;
-    width: fit-content;
 }
 
-.badge-iq.initial { background: #dcfce7; color: #166534; }
-.badge-iq.adjustment { background: #e0f2fe; color: #0369a1; }
-.badge-iq.purchase { background: #f3e8ff; color: #7e22ce; }
-.badge-iq.sale { background: #ffedd5; color: #c2410c; }
-.badge-iq.transfer { background: #ccfbf1; color: #0f766e; }
-.badge-iq.return { background: #fef9c3; color: #a16207; }
-.badge-iq.received { background: #dcfce7; color: #166534; }
-.badge-iq.consumed { background: #fee2e2; color: #991b1b; }
-.badge-iq.default { background: #f1f5f9; color: #475569; }
+.tx-type-iq i {
+    font-size: 14px;
+}
+
+.tx-type-iq.initial i { color: #166534; }
+.tx-type-iq.adjustment i { color: #0369a1; }
+.tx-type-iq.purchase i { color: #7e22ce; }
+.tx-type-iq.sale i { color: #c2410c; }
+.tx-type-iq.transfer i { color: #0f766e; }
+.tx-type-iq.return i { color: #a16207; }
+.tx-type-iq.received i { color: #166534; }
+.tx-type-iq.consumed i { color: #991b1b; }
+.tx-type-iq.default i { color: #475569; }
 
 .qty-control { display: flex; align-items: center; gap: 8px; }
 .qty-btn { width: 32px; height: 32px; border: 1px solid var(--border); background: white; border-radius: 6px; }

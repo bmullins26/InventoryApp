@@ -597,17 +597,19 @@ class NavigationController {
             const changeColor = r.change > 0 ? "color:green" : (r.change < 0 ? "color:red" : "");
             const changeSymbol = r.change > 0 ? "+" : "";
             
-            // Map transaction type to CSS class
-            const typeClass = r.type.toLowerCase().replace(/\s+/g, '-');
-            let badgeClass = 'default';
-            if (typeClass.includes('initial')) badgeClass = 'initial';
-            else if (typeClass.includes('adjustment')) badgeClass = 'adjustment';
-            else if (typeClass.includes('purchase')) badgeClass = 'purchase';
-            else if (typeClass.includes('sale')) badgeClass = 'sale';
-            else if (typeClass.includes('transfer')) badgeClass = 'transfer';
-            else if (typeClass.includes('return')) badgeClass = 'return';
-            else if (typeClass.includes('received')) badgeClass = 'received';
-            else if (typeClass.includes('consumed')) badgeClass = 'consumed';
+                        // Map transaction type to icon and class
+            let iconClass = 'bi-info-circle';
+            let txClass = 'default';
+            
+            const lowerType = r.type.toLowerCase();
+            if (lowerType.includes('initial')) { iconClass = 'bi-box-arrow-in-down'; txClass = 'initial'; }
+            else if (lowerType.includes('adjustment')) { iconClass = 'bi-arrow-repeat'; txClass = 'adjustment'; }
+            else if (lowerType.includes('purchase')) { iconClass = 'bi-cart-check'; txClass = 'purchase'; }
+            else if (lowerType.includes('sale')) { iconClass = 'bi-tag'; txClass = 'sale'; }
+            else if (lowerType.includes('transfer')) { iconClass = 'bi-arrow-left-right'; txClass = 'transfer'; }
+            else if (lowerType.includes('return')) { iconClass = 'bi-arrow-counterclockwise'; txClass = 'return'; }
+            else if (lowerType.includes('received')) { iconClass = 'bi-plus-circle'; txClass = 'received'; }
+            else if (lowerType.includes('consumed')) { iconClass = 'bi-dash-circle'; txClass = 'consumed'; }
             
             return `
                 <tr>
@@ -616,7 +618,12 @@ class NavigationController {
                         <div style="font-size:11px; color:#777">${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
                     </td>
                     <td data-label="Item"><strong>${r.productName}</strong><br><small style="color:#777">${r.category}</small></td>
-                    <td data-label="Type"><span class="badge-iq ${badgeClass}">${r.type}</span></td>
+                    <td data-label="Type">
+                        <div class="tx-type-iq ${txClass}">
+                            <i class="bi ${iconClass}"></i>
+                            ${r.type}
+                        </div>
+                    </td>
                     <td data-label="Prev" style="text-align:center">${r.prevQty}</td>
                     <td data-label="Change" style="text-align:center; font-weight:bold; ${changeColor}">${changeSymbol}${r.change}</td>
                     <td data-label="New" style="text-align:center; font-weight:bold">${r.newQty}</td>
