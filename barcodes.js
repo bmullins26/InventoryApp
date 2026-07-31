@@ -1,5 +1,5 @@
 ﻿/**
- * InventoryHub - Barcode Management System
+ * Inventory IQ - Barcode Management System
  */
 
 "use strict";
@@ -10,12 +10,12 @@ class BarcodeManager {
     }
 
     loadNextId() {
-        const id = localStorage.getItem('inventory_hub_barcode_counter');
+        const id = localStorage.getItem('inventory_iq_barcode_counter');
         return id ? parseInt(id) : 1;
     }
 
     saveNextId() {
-        localStorage.setItem('inventory_hub_barcode_counter', this.nextId.toString());
+        localStorage.setItem('inventory_iq_barcode_counter', this.nextId.toString());
     }
 
     /**
@@ -23,7 +23,7 @@ class BarcodeManager {
      */
     generateInternalBarcode() {
         const id = this.nextId.toString().padStart(6, '0');
-        const barcode = `IH-${id}`;
+        const barcode = `IQ-${id}`;
         this.nextId++;
         this.saveNextId();
         return barcode;

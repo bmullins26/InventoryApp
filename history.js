@@ -1,10 +1,10 @@
 /**
- * InventoryHub - History & Transaction Management
+ * Inventory IQ - History & Transaction Management
  */
 
 "use strict";
 
-const HISTORY_STORAGE_KEY = "inventory_hub_history";
+const HISTORY_STORAGE_KEY = "inventory_iq_history";
 
 /**
  * HISTORY MANAGER

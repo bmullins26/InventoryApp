@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>InventoryHub</title>
+        <title>Inventory IQ</title>
 
     <!-- HTML5-QRCode Scanner Library -->
     <script src="https://unpkg.com/html5-qrcode"></script>
@@ -27,12 +27,8 @@
 
     <aside class="sidebar">
 
-        <div class="logo">
-
-            <i class="bi bi-box-seam-fill"></i>
-
-            <h2>InventoryHub</h2>
-
+                <div class="logo">
+            <img src="logo.png" alt="Inventory IQ Logo" class="logo-img">
         </div>
 
         <nav id="mainNav">
@@ -72,9 +68,14 @@
                 Shopping List
             </a>
 
-            <a href="#" class="nav-link" data-view="reports">
+                        <a href="#" class="nav-link" data-view="reports">
                 <i class="bi bi-graph-up"></i>
                 Reports
+            </a>
+
+            <a href="#" class="nav-link" data-view="analytics">
+                <i class="bi bi-pie-chart-fill"></i>
+                Analytics
             </a>
 
             <a href="#" class="nav-link" data-view="settings">
@@ -90,11 +91,16 @@
 
     <main class="main">
 
-        <!-- Page Header -->
+                <!-- Page Header -->
         <header class="topbar">
-            <div>
-                <h1 id="pageTitle">Dashboard</h1>
-                <p id="pageSubtitle">Inventory Overview</p>
+            <div class="header-left">
+                <button id="mobileMenuBtn" class="mobile-menu-btn">
+                    <i class="bi bi-list"></i>
+                </button>
+                <div>
+                    <h1 id="pageTitle">Dashboard</h1>
+                    <p id="pageSubtitle">Inventory Overview</p>
+                </div>
             </div>
 
             <div class="user">
@@ -300,6 +306,97 @@
             </div>
         </section>
 
+        <!-- ================= ANALYTICS VIEW ================= -->
+        <section id="analytics-view" class="view-section">
+            <div class="analytics-container">
+                
+                <!-- Overview Stats -->
+                <div class="cards" style="margin-bottom: 25px;">
+                    <div class="card-box">
+                        <h6>Avg. Daily Usage</h6>
+                        <h2 id="avgDailyUsage">0</h2>
+                    </div>
+                    <div class="card-box">
+                        <h6>Dead Stock Items</h6>
+                        <h2 id="deadStockCount">0</h2>
+                    </div>
+                    <div class="card-box gold">
+                        <h6>Forecast Confidence</h6>
+                        <h2 id="forecastConfidence">0%</h2>
+                    </div>
+                </div>
+
+                <!-- Usage Analytics -->
+                <div class="reports-container" style="margin-bottom: 25px;">
+                    <div class="report-card">
+                        <h3><i class="bi bi-arrow-up-right-circle-fill"></i> Fast Moving Items</h3>
+                        <div id="fastMovingList" class="report-content">
+                            <!-- JS Populated -->
+                        </div>
+                    </div>
+                    <div class="report-card">
+                        <h3><i class="bi bi-arrow-down-left-circle-fill"></i> Slow Moving Items</h3>
+                        <div id="slowMovingList" class="report-content">
+                            <!-- JS Populated -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stock Forecast Table -->
+                <div class="inventory">
+                    <div class="inventory-header">
+                        <h2>Inventory Forecast & Predictions</h2>
+                        <button id="exportAnalyticsBtn" class="action-secondary">
+                            <i class="bi bi-download"></i> Export Analysis
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Consumption Rate (Daily)</th>
+                                    <th>Days Remaining</th>
+                                    <th>Expected Out Date</th>
+                                    <th>Reorder Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="forecastTableBody">
+                                <!-- JS Populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Movement Heat Map Summary -->
+                <div class="reports-container" style="margin-top: 25px;">
+                    <div class="report-card full-width">
+                        <h3><i class="bi bi-grid-3x3-gap-fill"></i> Inventory Movement Heatmap Summary</h3>
+                        <div id="movementHeatMap" style="display: flex; gap: 10px; margin-top: 15px;">
+                            <div style="flex: 1; padding: 15px; background: #d4edda; border-radius: 10px; text-align: center;">
+                                <strong>Fast Moving</strong>
+                                <div id="countFast" style="font-size: 24px; font-weight: 700;">0</div>
+                            </div>
+                            <div style="flex: 1; padding: 15px; background: #fff3cd; border-radius: 10px; text-align: center;">
+                                <strong>Medium Moving</strong>
+                                <div id="countMedium" style="font-size: 24px; font-weight: 700;">0</div>
+                            </div>
+                            <div style="flex: 1; padding: 15px; background: #f8d7da; border-radius: 10px; text-align: center;">
+                                <strong>Slow Moving</strong>
+                                <div id="countSlow" style="font-size: 24px; font-weight: 700;">0</div>
+                            </div>
+                            <div style="flex: 1; padding: 15px; background: #e2e3e5; border-radius: 10px; text-align: center;">
+                                <strong>Dead Stock</strong>
+                                <div id="countDead" style="font-size: 24px; font-weight: 700;">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
         <!-- ================= INVENTORY VIEW ================= -->
         <section id="inventory-view" class="view-section">
 
@@ -332,13 +429,15 @@
                         </thead>
                         <tbody id="inventoryTable">
                         </tbody>
-                    </table>
-                </div>
-            </div>
+</table>
+</div>
+</div>
+</section>
 
-        </section>
+<!-- Sidebar Overlay -->
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-        <!-- ================= SHOPPING LIST VIEW ================= -->
+<!-- ================= SHOPPING LIST VIEW ================= -->
         <section id="shopping-view" class="view-section">
 
             <div class="shopping-list-section">
@@ -481,7 +580,7 @@
                     <div class="settings-content">
                         <div class="setting-item">
                             <label for="businessName">Business Name</label>
-                            <input type="text" id="businessName" placeholder="Enter business name" value="InventoryHub">
+                            <input type="text" id="businessName" placeholder="Enter business name" value="Inventory IQ">
                         </div>
                         <div class="setting-item">
                             <label for="defaultCurrency">Default Currency</label>
@@ -731,6 +830,7 @@
 
 <script src="history.js"></script>
 <script src="barcodes.js"></script>
+<script src="analytics.js"></script>
 <script src="app.js"></script>
 </body>
 

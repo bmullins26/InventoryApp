@@ -392,7 +392,7 @@ class InventoryUI {
         this.renderRecentActivity();
     }
 
-    renderTable() {
+        renderTable() {
         if (!this.elements.tableBody) return;
         const items = this.manager.search(this.elements.searchBox ? this.elements.searchBox.value : "");
         this.elements.tableBody.innerHTML = items.map(item => {
@@ -404,23 +404,23 @@ class InventoryUI {
             
             return `
                 <tr style="${rowStyle}">
-                    <td>
+                    <td data-label="Item">
                         <strong>${item.name}</strong><br>
                         <small style="color:#888">${item.manufacturerBarcode || ""}</small>
                     </td>
-                    <td>${item.category}</td>
-                    <td>
+                    <td data-label="Category">${item.category}</td>
+                    <td data-label="Qty">
                         <div class="qty-control">
                             <button class="qty-btn minus" data-id="${item.id}">-</button>
                             <span class="qty-val">${item.quantity}</span>
                             <button class="qty-btn plus" data-id="${item.id}">+</button>
                         </div>
                     </td>
-                    <td>${item.minQuantity}</td>
-                    <td>$${parseFloat(item.cost).toFixed(2)}</td>
-                    <td>${item.location}</td>
-                    <td><span class="${statusClass}">${statusText}</span></td>
-                    <td>
+                    <td data-label="Min">${item.minQuantity}</td>
+                    <td data-label="Cost">$${parseFloat(item.cost).toFixed(2)}</td>
+                    <td data-label="Location">${item.location}</td>
+                    <td data-label="Status"><span class="${statusClass}">${statusText}</span></td>
+                    <td data-label="Actions">
                         <button class="action-btn edit-btn" data-id="${item.id}"><i class="bi bi-pencil"></i></button>
                         <button class="action-btn delete-btn" data-id="${item.id}"><i class="bi bi-trash"></i></button>
                     </td>
@@ -472,21 +472,44 @@ class InventoryUI {
  * NAVIGATION & PAGE CONTROLLER
  */
 class NavigationController {
-    constructor(ui, activityManager, historyManager, barcodeManager) {
+    constructor(ui, activityManager, historyManager, barcodeManager, analyticsUI) {
         this.ui = ui;
         this.activityManager = activityManager;
         this.historyManager = historyManager;
         this.barcodeManager = barcodeManager;
+        this.analyticsUI = analyticsUI;
         this.init();
     }
 
-    init() {
+        init() {
         const links = document.querySelectorAll(".nav-link");
+        const sidebar = document.querySelector(".sidebar");
+        const overlay = document.getElementById("sidebarOverlay");
+        const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.onclick = () => {
+                sidebar.classList.toggle("open");
+                overlay.classList.toggle("show");
+            };
+        }
+
+        if (overlay) {
+            overlay.onclick = () => {
+                sidebar.classList.remove("open");
+                overlay.classList.remove("show");
+            };
+        }
+
         links.forEach(link => {
             link.onclick = (e) => {
                 e.preventDefault();
                 const view = link.dataset.view;
                 this.switchView(view, link);
+                
+                // Close sidebar on mobile after selection
+                sidebar.classList.remove("open");
+                overlay.classList.remove("show");
             };
         });
         
@@ -516,8 +539,10 @@ class NavigationController {
             activity: { title: "Activity Log", subtitle: "Transaction history" },
             history: { title: "History", subtitle: "Detailed audit trail" },
             barcodes: { title: "Barcode Labels", subtitle: "Print inventory labels" },
+            scanner: { title: "Barcode Scanner", subtitle: "Camera scanning mode" },
             shopping: { title: "Shopping List", subtitle: "Items to purchase" },
             reports: { title: "Reports", subtitle: "Analytics and insights" },
+            analytics: { title: "Analytics", subtitle: "Forecasting and movement" },
             settings: { title: "Settings", subtitle: "System configuration" }
         };
         const head = titles[viewName] || titles.dashboard;
@@ -534,6 +559,8 @@ class NavigationController {
             this.renderHistoryLog();
         } else if (viewName === "barcodes") {
             this.renderBarcodeList();
+        } else if (viewName === "analytics") {
+            this.analyticsUI.render();
         } else {
             this.ui.render();
         }
@@ -588,19 +615,19 @@ class NavigationController {
         }).join('') || '<tr><td colspan="8" style="text-align:center;padding:40px">No history found</td></tr>';
     }
 
-    renderBarcodeList() {
+        renderBarcodeList() {
         const body = document.getElementById("barcodeTableBody");
         if (!body) return;
-        const query = document.getElementById("barcodeSearch")?.value || "";
+        const query = document.getElementById("barcodeSearch").value || "";
         const items = this.ui.manager.search(query);
         body.innerHTML = items.map(item => {
             return `
                 <tr>
-                    <td><strong>${item.name}</strong></td>
-                    <td>${item.category}</td>
-                    <td><code>${item.internalBarcode || "-"}</code></td>
-                    <td>${item.manufacturerBarcode || "<span style='color:#ccc'>None</span>"}</td>
-                    <td>
+                    <td data-label="Item"><strong>${item.name}</strong></td>
+                    <td data-label="Category">${item.category}</td>
+                    <td data-label="Internal"><code>${item.internalBarcode || "-"}</code></td>
+                    <td data-label="Manufacturer">${item.manufacturerBarcode || "<span style='color:#ccc'>None</span>"}</td>
+                    <td data-label="Actions">
                         <button class="action-btn print-btn" data-id="${item.id}"><i class="bi bi-printer"></i> Print</button>
                     </td>
                 </tr>
@@ -614,7 +641,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const historyManager = new HistoryManager();
     const barcodeManager = new BarcodeManager();
     const inventoryManager = new InventoryManager(activityManager, historyManager, barcodeManager);
+    
+    const analyticsManager = new AnalyticsManager(inventoryManager, historyManager);
+    const analyticsUI = new AnalyticsUI(analyticsManager);
+
     const ui = new InventoryUI(inventoryManager, activityManager);
-    window.navigation = new NavigationController(ui, activityManager, historyManager, barcodeManager);
+    window.navigation = new NavigationController(ui, activityManager, historyManager, barcodeManager, analyticsUI);
     new ScannerController(ui, inventoryManager, historyManager, barcodeManager);
 });
