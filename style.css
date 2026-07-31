@@ -218,3 +218,108 @@ tbody td { padding: 16px 24px; border-bottom: 1px solid var(--border); font-size
 
 .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 999; }
 .sidebar-overlay.show { display: block; }
+
+/* ======================
+    ONBOARDING WIZARD
+====================== */
+
+.onboarding-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--background);
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.wizard-card {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 40px;
+    animation: modalIn 0.4s ease;
+}
+
+.wizard-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.wizard-logo {
+    max-width: 120px;
+    margin-bottom: 20px;
+}
+
+.progress-container {
+    height: 6px;
+    background: #eee;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--blue);
+    transition: width 0.3s ease;
+}
+
+.step-indicator {
+    font-size: 12px;
+    color: var(--text-light);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.wizard-step {
+    display: none;
+}
+
+.wizard-step.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.wizard-step h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.wizard-step p {
+    text-align: center;
+    color: var(--text-light);
+    margin-bottom: 25px;
+}
+
+.wizard-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.input-with-status {
+    position: relative;
+}
+
+#codeStatus {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+}
+
+.review-grid {
+    background: var(--background);
+    padding: 20px;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}

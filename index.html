@@ -30,6 +30,114 @@
 
 <body>
 
+    <!-- Onboarding Wizard -->
+    <div id="onboardingWizard" class="onboarding-overlay" style="display: none;">
+        <div class="wizard-card">
+            <div class="wizard-header">
+                <img src="logo.png" alt="Logo" class="wizard-logo">
+                <div class="progress-container">
+                    <div id="wizardProgress" class="progress-bar" style="width: 20%;"></div>
+                </div>
+                <div class="step-indicator">Step <span id="currentStepNum">1</span> of 5</div>
+            </div>
+
+            <!-- Step 1: Welcome -->
+            <div id="step1" class="wizard-step active">
+                <h2>Welcome to Inventory IQ</h2>
+                <p>Let's create your company in less than a minute.</p>
+                <div class="wizard-actions">
+                    <button class="action-primary btn-next" data-next="2">Create Company</button>
+                    <button class="action-secondary btn-login">Already have an account?</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Company Info -->
+            <div id="step2" class="wizard-step">
+                <h2>Company Details</h2>
+                <div class="field">
+                    <label>Company Name</label>
+                    <input type="text" id="wizOrgName" placeholder="e.g. Fred's Logistics">
+                </div>
+                <div class="field">
+                    <label>Company Code</label>
+                    <div class="input-with-status">
+                        <input type="text" id="wizOrgCode" maxlength="12" placeholder="FREDS">
+                        <span id="codeStatus"></span>
+                    </div>
+                    <small>4-12 letters/numbers. Used for employee login.</small>
+                </div>
+                <div class="field">
+                    <label>Industry</label>
+                    <select id="wizOrgType">
+                        <option>Retail</option>
+                        <option>Restaurant</option>
+                        <option>Warehouse</option>
+                        <option>School</option>
+                        <option>Medical</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="wizard-actions">
+                    <button class="action-secondary btn-prev" data-prev="1">Back</button>
+                    <button class="action-primary btn-next" data-next="3">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Owner Account -->
+            <div id="step3" class="wizard-step">
+                <h2>Owner Account</h2>
+                <div class="field">
+                    <label>Full Name</label>
+                    <input type="text" id="wizOwnerName" placeholder="Brian Smith">
+                </div>
+                <div class="field">
+                    <label>Email Address</label>
+                    <input type="email" id="wizOwnerEmail" placeholder="brian@freds.com">
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" id="wizOwnerPass" placeholder="••••••••">
+                </div>
+                <div class="wizard-actions">
+                    <button class="action-secondary btn-prev" data-prev="2">Back</button>
+                    <button class="action-primary btn-next" data-next="4">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Branding -->
+            <div id="step4" class="wizard-step">
+                <h2>Quick Branding</h2>
+                <div class="field">
+                    <label>Primary Brand Color</label>
+                    <input type="color" id="wizBrandColor" value="#0056B3" style="height: 50px; padding: 5px;">
+                </div>
+                <div class="field">
+                    <label>
+                        <input type="checkbox" id="wizDarkMode"> Enable Dark Mode
+                    </label>
+                </div>
+                <div class="wizard-actions">
+                    <button class="action-secondary btn-prev" data-prev="3">Back</button>
+                    <button class="action-primary btn-next" data-next="5">Review</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Review -->
+            <div id="step5" class="wizard-step">
+                <h2>Final Review</h2>
+                <div class="review-grid">
+                    <div><strong>Company:</strong> <span id="revOrgName"></span> (<span id="revOrgCode"></span>)</div>
+                    <div><strong>Owner:</strong> <span id="revOwnerName"></span></div>
+                    <div><strong>Email:</strong> <span id="revOwnerEmail"></span></div>
+                </div>
+                <div class="wizard-actions">
+                    <button class="action-secondary btn-prev" data-prev="4">Back</button>
+                    <button id="btnFinishWizard" class="action-primary">Create Company</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div id="toastContainer"></div>
 
