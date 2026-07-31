@@ -24,6 +24,30 @@ class CloudManager {
     }
 
     /**
+     * v4.1 - Create New Organization & Owner Profile
+     */
+    async createOrganization(wizardData) {
+        console.log("Creating Organization in Cloud Foundation...", wizardData);
+        
+        // This is the blueprint for the Supabase logic:
+        // 1. auth.signUp({ email, password })
+        // 2. insert into 'organizations' (name, code)
+        // 3. insert into 'branding_settings' (org_id, primary_color, dark_mode)
+        // 4. insert into 'profiles' (id, org_id, full_name)
+        
+        this.isAuthenticated = true; // Simulating success for foundation
+        this.currentOrg = { name: wizardData.orgName, code: wizardData.orgCode };
+        
+        // Apply immediate branding from wizard
+        this.applyBranding({
+            primary_color: wizardData.brandColor,
+            app_name: wizardData.orgName
+        });
+
+        return { success: true };
+    }
+
+    /**
      * Foundation for Employee PIN Login
      */
     async loginEmployee(orgCode, pin) {

@@ -83,9 +83,11 @@ class ActivityManager {
  * INVENTORY DATA MANAGER
  */
 class InventoryManager {
-    constructor(activityManager, historyManager) {
+    constructor(activityManager, historyManager, barcodeManager, cloudManager) {
         this.activityManager = activityManager;
         this.historyManager = historyManager;
+        this.barcodeManager = barcodeManager;
+        this.cloudManager = cloudManager;
         this.items = this.loadFromStorage();
         this.migrateData();
         if (this.items.length === 0) {
@@ -697,7 +699,176 @@ document.addEventListener("DOMContentLoaded", () => {
     const analyticsManager = new AnalyticsManager(inventoryManager, historyManager);
     const analyticsUI = new AnalyticsUI(analyticsManager);
 
-    const ui = new InventoryUI(inventoryManager, activityManager);
+        const ui = new InventoryUI(inventoryManager, activityManager);
     window.navigation = new NavigationController(ui, activityManager, historyManager, barcodeManager, analyticsUI);
     new ScannerController(ui, inventoryManager, historyManager, barcodeManager);
+    
+    // Initialize Wizard Controller
+    new OnboardingWizard(cloudManager);
 });
+
+/**
+ * ONBOARDING WIZARD CONTROLLER
+ */
+class OnboardingWizard {
+    constructor(cloudManager) {
+        this.cloudManager = cloudManager;
+        this.currentStep = 1;
+        this.totalSteps = 5;
+        this.data = {
+            orgName: '',
+            orgCode: '',
+            orgType: 'Retail',
+            ownerName: '',
+            ownerEmail: '',
+            ownerPass: '',
+            brandColor: '#0056B3',
+            darkMode: false
+        };
+
+        this.elements = {
+            wizard: document.getElementById('onboardingWizard'),
+            progressBar: document.getElementById('wizardProgress'),
+            stepNum: document.getElementById('currentStepNum'),
+            steps: document.querySelectorAll('.wizard-step'),
+            codeStatus: document.getElementById('codeStatus')
+        };
+
+        this.init();
+    }
+
+    init() {
+        // Check if user is already registered
+        const isRegistered = localStorage.getItem('IQ_USER_REGISTERED');
+        if (!isRegistered) {
+            this.showWizard();
+        }
+
+        // Next Buttons
+        document.querySelectorAll('.btn-next').forEach(btn => {
+            btn.onclick = () => {
+                if (this.validateStep(this.currentStep)) {
+                    this.goToStep(parseInt(btn.dataset.next));
+                }
+            };
+        });
+
+        // Prev Buttons
+        document.querySelectorAll('.btn-prev').forEach(btn => {
+            btn.onclick = () => this.goToStep(parseInt(btn.dataset.prev));
+        });
+
+        // Code Validation
+        const codeInput = document.getElementById('wizOrgCode');
+        if (codeInput) {
+            codeInput.oninput = (e) => {
+                let code = e.target.value.toUpperCase().replace(/\s+/g, '');
+                e.target.value = code;
+                this.checkCodeAvailability(code);
+            };
+        }
+
+        // Finish Button
+        const finishBtn = document.getElementById('btnFinishWizard');
+        if (finishBtn) {
+            finishBtn.onclick = () => this.handleFinish();
+        }
+    }
+
+    showWizard() {
+        if (this.elements.wizard) this.elements.wizard.style.display = 'flex';
+    }
+
+    goToStep(step) {
+        this.currentStep = step;
+        
+        // Update UI
+        this.elements.steps.forEach(s => s.classList.remove('active'));
+        document.getElementById(`step${step}`).classList.add('active');
+        
+        // Update Progress
+        const progress = (step / this.totalSteps) * 100;
+        this.elements.progressBar.style.width = `${progress}%`;
+        this.elements.stepNum.innerText = step;
+
+        if (step === 5) this.populateReview();
+    }
+
+    validateStep(step) {
+        if (step === 2) {
+            const name = document.getElementById('wizOrgName').value;
+            const code = document.getElementById('wizOrgCode').value;
+            if (!name || code.length < 4) {
+                alert("Please enter a valid company name and code (min 4 chars).");
+                return false;
+            }
+            this.data.orgName = name;
+            this.data.orgCode = code;
+            this.data.orgType = document.getElementById('wizOrgType').value;
+        }
+        if (step === 3) {
+            const name = document.getElementById('wizOwnerName').value;
+            const email = document.getElementById('wizOwnerEmail').value;
+            const pass = document.getElementById('wizOwnerPass').value;
+            if (!name || !email || pass.length < 6) {
+                alert("Please complete all owner details. Password must be at least 6 characters.");
+                return false;
+            }
+            this.data.ownerName = name;
+            this.data.ownerEmail = email;
+            this.data.ownerPass = pass;
+        }
+        if (step === 4) {
+            this.data.brandColor = document.getElementById('wizBrandColor').value;
+            this.data.darkMode = document.getElementById('wizDarkMode').checked;
+        }
+        return true;
+    }
+
+    checkCodeAvailability(code) {
+        const reserved = ['ADMIN', 'ROOT', 'SYSTEM', 'SUPERADMIN', 'INVENTORYIQ', 'IQ', 'TEST', 'DEMO', 'OWNER', 'NULL'];
+        if (code.length < 4) {
+            this.elements.codeStatus.innerHTML = '';
+            return;
+        }
+        if (reserved.includes(code)) {
+            this.elements.codeStatus.innerHTML = '❌ Reserved';
+            return;
+        }
+        // In foundation mode, we assume available
+        this.elements.codeStatus.innerHTML = '✅ Available';
+    }
+
+    populateReview() {
+        document.getElementById('revOrgName').innerText = this.data.orgName;
+        document.getElementById('revOrgCode').innerText = this.data.orgCode;
+        document.getElementById('revOwnerName').innerText = this.data.ownerName;
+        document.getElementById('revOwnerEmail').innerText = this.data.ownerEmail;
+    }
+
+    async handleFinish() {
+        try {
+            // 1. Create Organization via CloudManager foundation
+            await this.cloudManager.createOrganization(this.data);
+            
+            // 2. Mark as registered locally
+            localStorage.setItem('IQ_USER_REGISTERED', 'true');
+            localStorage.setItem('IQ_ORG_NAME', this.data.orgName);
+            
+            // 3. Close Wizard
+            this.elements.wizard.style.animation = 'fadeOut 0.4s ease forwards';
+            setTimeout(() => {
+                this.elements.wizard.style.display = 'none';
+                
+                // 4. Update UI
+                if (window.ui) {
+                    window.ui.render();
+                    alert(`Welcome to Inventory IQ, ${this.data.ownerName}!`);
+                }
+            }, 400);
+
+        } catch (err) {
+            alert("Error creating company: " + err.message);
+        }
+    }
+}
