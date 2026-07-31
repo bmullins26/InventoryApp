@@ -587,29 +587,41 @@ class NavigationController {
         }).join('') || '<tr><td colspan="7" style="text-align:center;padding:40px">No activities found</td></tr>';
     }
 
-    renderHistoryLog() {
+        renderHistoryLog() {
         const body = document.getElementById("historyTableBody");
         if (!body) return;
-        const query = document.getElementById("historySearch")?.value || "";
+        const query = document.getElementById("historySearch").value || "";
         const history = this.historyManager.search(query);
         body.innerHTML = history.map(r => {
             const d = new Date(r.timestamp);
             const changeColor = r.change > 0 ? "color:green" : (r.change < 0 ? "color:red" : "");
             const changeSymbol = r.change > 0 ? "+" : "";
             
+            // Map transaction type to CSS class
+            const typeClass = r.type.toLowerCase().replace(/\s+/g, '-');
+            let badgeClass = 'default';
+            if (typeClass.includes('initial')) badgeClass = 'initial';
+            else if (typeClass.includes('adjustment')) badgeClass = 'adjustment';
+            else if (typeClass.includes('purchase')) badgeClass = 'purchase';
+            else if (typeClass.includes('sale')) badgeClass = 'sale';
+            else if (typeClass.includes('transfer')) badgeClass = 'transfer';
+            else if (typeClass.includes('return')) badgeClass = 'return';
+            else if (typeClass.includes('received')) badgeClass = 'received';
+            else if (typeClass.includes('consumed')) badgeClass = 'consumed';
+            
             return `
                 <tr>
-                    <td>
+                    <td data-label="Date">
                         <div style="font-size:13px">${d.toLocaleDateString()}</div>
                         <div style="font-size:11px; color:#777">${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
                     </td>
-                    <td><strong>${r.productName}</strong><br><small style="color:#777">${r.category}</small></td>
-                    <td><span class="status instock" style="background:#6c757d; font-size:11px">${r.type}</span></td>
-                    <td style="text-align:center">${r.prevQty}</td>
-                    <td style="text-align:center; font-weight:bold; ${changeColor}">${changeSymbol}${r.change}</td>
-                    <td style="text-align:center; font-weight:bold">${r.newQty}</td>
-                    <td>${r.user}</td>
-                    <td style="max-width:200px; font-size:12px">${r.notes}</td>
+                    <td data-label="Item"><strong>${r.productName}</strong><br><small style="color:#777">${r.category}</small></td>
+                    <td data-label="Type"><span class="badge-iq ${badgeClass}">${r.type}</span></td>
+                    <td data-label="Prev" style="text-align:center">${r.prevQty}</td>
+                    <td data-label="Change" style="text-align:center; font-weight:bold; ${changeColor}">${changeSymbol}${r.change}</td>
+                    <td data-label="New" style="text-align:center; font-weight:bold">${r.newQty}</td>
+                    <td data-label="User">${r.user}</td>
+                    <td data-label="Notes" style="max-width:200px; font-size:12px">${r.notes}</td>
                 </tr>
             `;
         }).join('') || '<tr><td colspan="8" style="text-align:center;padding:40px">No history found</td></tr>';
