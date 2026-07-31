@@ -43,11 +43,16 @@
             <img src="logo.png" alt="Inventory IQ Logo" class="logo-img">
         </div>
 
-        <nav id="mainNav">
+                <nav id="mainNav">
 
-                        <a href="#" class="nav-link active" data-view="dashboard">
+            <a href="#" class="nav-link active" data-view="dashboard">
                 <i class="bi bi-speedometer2"></i>
                 Dashboard
+            </a>
+
+            <a href="#" class="nav-link" data-view="cloud">
+                <i class="bi bi-cloud-check"></i>
+                Cloud Account
             </a>
 
             <a href="#" class="nav-link" data-view="inventory">
@@ -188,6 +193,59 @@
                 </div>
             </section>
 
+                </section>
+
+        <!-- ================= CLOUD / AUTH VIEW ================= -->
+        <section id="cloud-view" class="view-section">
+            <div class="analytics-container" style="max-width: 500px; margin: 0 auto; padding: 30px;">
+                <div id="authContainer">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <i class="bi bi-cloud-arrow-up" style="font-size: 48px; color: var(--blue);"></i>
+                        <h2>Inventory IQ Cloud</h2>
+                        <p style="color: var(--text-light);">Access your data from anywhere</p>
+                    </div>
+
+                    <div id="loginForm">
+                        <div class="field">
+                            <label>Email Address</label>
+                            <input type="email" id="cloudEmail" placeholder="email@company.com">
+                        </div>
+                        <div class="field">
+                            <label>Password</label>
+                            <input type="password" id="cloudPassword" placeholder="••••••••">
+                        </div>
+                        <button class="action-primary" style="width: 100%; justify-content: center; margin-bottom: 15px;">
+                            Sign In / Register
+                        </button>
+                        <div style="text-align: center; margin: 20px 0; color: var(--border);">OR</div>
+                        <div class="field">
+                            <label>Organization Code</label>
+                            <input type="text" id="employeeOrgCode" placeholder="FREDS">
+                        </div>
+                        <div class="field">
+                            <label>Employee PIN</label>
+                            <input type="password" id="employeePin" maxlength="4" placeholder="1234">
+                        </div>
+                        <button class="action-secondary" style="width: 100%; justify-content: center;">
+                            Employee PIN Login
+                        </button>
+                    </div>
+                </div>
+
+                <div id="migrationContainer" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <i class="bi bi-box-arrow-in-up" style="font-size: 48px; color: var(--gold);"></i>
+                        <h2>Migration Available</h2>
+                        <p>We found inventory data on this device.</p>
+                    </div>
+                    <button class="action-primary" style="width: 100%; justify-content: center; margin-bottom: 15px;">
+                        Import Local Inventory to Cloud
+                    </button>
+                    <button class="action-secondary" style="width: 100%; justify-content: center;">
+                        Keep Device Only (Local)
+                    </button>
+                </div>
+            </div>
         </section>
 
         <!-- ================= ACTIVITY LOG VIEW ================= -->
@@ -848,6 +906,7 @@
 <script src="history.js"></script>
 <script src="barcodes.js"></script>
 <script src="analytics.js"></script>
+<script src="cloud.js"></script>
 <script src="app.js"></script>
 </body>
 
